@@ -1,26 +1,24 @@
 var _web = require("@solana/web3.js");
 
 var _splToken = require("@solana/spl-token");
+
 var Transaction = _web.Transaction;
 
 const url = 'https://solana-api.projectserum.com';
 const connection = new _web.Connection(url);
 
 const walletAddress = new _web.PublicKey('CXHggxXTt1xpaYixLz7qFzpLNkBk8FurAam79BXJknWQ');
-const tokenMintAddress = new _web.PublicKey('CXHggxXTt1xpaYixLz7qFzpLNkBk8FurAam79BXJknWQ');
+const tokenMintAddress = new _web.PublicKey('SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt');
 
-const acct = new _web.Account(); // my private key array
+const acct = new _web.Account(); // walletAddress' pvt key
 
-const SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID = new _web.PublicKey('SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt');
+const SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID = new _web.PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL');
 
 async function findAssociatedTokenAddress(walletAddress, tokenMintAddress) {
   var x = await _web.PublicKey.findProgramAddress([walletAddress.toBuffer(), _splToken.TOKEN_PROGRAM_ID.toBuffer(),
   tokenMintAddress.toBuffer()], SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID);
-  // console.log(x[0].toString());
   return x[0];
 }
-
-// findAssociatedTokenAddress(walletAddress, tokenMintAddress)
 
 async function createAssociatedTokenAccount(connection, wallet, splTokenMintAddress) {
   const [ix, address] = await createAssociatedTokenAccountIx(
@@ -50,10 +48,8 @@ async function signAndSendTransaction(connection,transaction,wallet,signers,skip
 }
 
 async function createAssociatedTokenAccountIx(fundingAddress, walletAddress, splTokenMintAddress) {
-  const associatedTokenAddress = await findAssociatedTokenAddress(
-    walletAddress,
-    splTokenMintAddress,
-  );
+  const associatedTokenAddress = await findAssociatedTokenAddress(walletAddress,splTokenMintAddress);
+  const ASSOCIATED_TOKEN_PROGRAM_ID = await findAssociatedTokenAddress(walletAddress,tokenMintAddress);
   const systemProgramId = new _web.PublicKey('11111111111111111111111111111111');
   const keys = [
     {
@@ -94,14 +90,15 @@ async function createAssociatedTokenAccountIx(fundingAddress, walletAddress, spl
   ];
   const ix = new _web.TransactionInstruction({
     keys,
-    programId: SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID,
+    programId: ASSOCIATED_TOKEN_PROGRAM_ID,
     data: Buffer.from([]),
   });
   return [ix, associatedTokenAddress];
 }
 
 async function doSth(){
-  console.log(await createAssociatedTokenAccount(connection,walletAddress,tokenMintAddress));  
+  var x = await createAssociatedTokenAccount(connection,walletAddress,tokenMintAddress);
+  console.log(x);  
 }
 
 doSth();
