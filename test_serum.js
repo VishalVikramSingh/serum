@@ -11,7 +11,7 @@ const connection = new _web.Connection(url);
 const walletAddress = new _web.PublicKey('CXHggxXTt1xpaYixLz7qFzpLNkBk8FurAam79BXJknWQ');
 const tokenMintAddress = new _web.PublicKey('SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt');
 
-const acct = new _web.Account([35,178,43,186,77,232,104,146,105,80,171,125,172,130,75,0,206,213,35,200,183,236,74,138,100,148,37,206,92,214,17,150,171,50,216,111,120,149,31,109,160,122,23,146,14,107,102,116,187,25,96,191,52,145,208,101,31,233,108,206,40,136,206,5]);
+const acct = new _web.Account();// pvt key array
 
 const SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID = new _web.PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL');
 
